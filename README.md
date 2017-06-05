@@ -33,10 +33,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private String TAG= "MainActivity";
     Button openQrCodeScan;	//打开摄像头按钮
-EditText text;		//扫描成功后,显示文本
-Button CreateQrCode;	    	//生成二维码的按钮
-ImageView QrCode;		//二维码显示的图片
+    EditText text;		//扫描成功后,显示文本
+
+    Button CreateQrCode;	    	//生成二维码的按钮
+
+    ImageView QrCode;		//二维码显示的图片
+
     TextView qrCodeText;		//要生成二维码的文字
+    
     private int REQUEST_CODE = 0x01; //打开扫描界面请求码
     private int RESULT_OK = 0xA1; //扫描成功返回码
     
