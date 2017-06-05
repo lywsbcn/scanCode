@@ -10,6 +10,7 @@
 集成
 
 1.	项目的build.gradle中添加依赖库 
+
 compile 'com.google.zxing:core:3.3.0'
  
 
@@ -19,14 +20,17 @@ compile 'com.google.zxing:core:3.3.0'
 
  
 4.	添加权限
+
 <uses-permission android:name="android.permission.INTERNET" /> <!-- 网络权限 -->
 <uses-permission android:name="android.permission.VIBRATE" /> <!-- 震动权限 -->
 <uses-permission android:name="android.permission.CAMERA" /> <!-- 摄像头权限 -->
 <uses-feature android:name="android.hardware.camera.autofocus" /> <!-- 自动聚焦权限 -->
 
+
 使用
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+
     private String TAG= "MainActivity";
     Button openQrCodeScan;	//打开摄像头按钮
 EditText text;		//扫描成功后,显示文本
@@ -35,13 +39,16 @@ ImageView QrCode;		//二维码显示的图片
     TextView qrCodeText;		//要生成二维码的文字
     private int REQUEST_CODE = 0x01; //打开扫描界面请求码
     private int RESULT_OK = 0xA1; //扫描成功返回码
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+    
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         viewInit();
     }
     private void viewInit(){
+    
         openQrCodeScan=(Button)findViewById(R.id.openQrCodeScan);
         text=(EditText)findViewById(R.id.text);
         CreateQrCode=(Button)findViewById(R.id.CreateQrCode);
@@ -52,6 +59,7 @@ ImageView QrCode;		//二维码显示的图片
     }
     @Override
     public void onClick(View v) {
+    
         switch (v.getId()){
             case R.id.openQrCodeScan:
                 if (CommonUtils.isCameraCanUse()){
@@ -81,6 +89,7 @@ ImageView QrCode;		//二维码显示的图片
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK){
             Bundle bundle=data.getExtras();
@@ -92,24 +101,39 @@ ImageView QrCode;		//二维码显示的图片
 
 说明
 1.	调用扫描
+
 Intent intent =new Intent(MainActivity.this, CaptureActivity.class);
 startActivityForResult(intent,REQUEST_CODE);
 实际上就是打开一个新的活动页,进行扫描获取条码数据,获取成功的时候,就退回来
 并且会把获取的数据传回来
 扫描结果的回调,重写方法 onActivityResult
+
 2.	生成二维码
+
 Bitmap bitmap = EncodingHandler.createQRCode(str,500);  //500表示宽高
 
 部分源码类介绍
+
+
 CaptureActivity Zxing暴露出来进行调用的界面，在handleDecode方法中对扫码成功后的动作进行处理。
+
 CameraManager getFramingRect()方法,定义了扫描的区域，可以自己修改。
+
 ViewfinderView ZXing扫码窗口的绘制。
+
 private void drawTextInfo(Canvas canvas, Rect frame)
+
 修改文本绘制的位置
+
 private void drawLaserScanner(Canvas canvas, Rect frame)
+
 修改扫描线的样式。注意若使用paint.setShader(Shader shader) 方法，一定要在绘制完成后调用paint.setShader(null)。以免绘制信息出错。
+
 CameraConfigurationManager 修改横竖屏、处理变形效果的核心类。
+
 DecodeHandler.decode ZXing解码的核心类
+
 CaptureActivityHandler
+
 当DecodeHandler.decode完成解码后，系统会向CaptureActivityHandler发消息。如果编码成功则调用CaptureActivity.handleDecode方法对扫描到的结果进行分类处理。
 
